@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="chart"></div>
+
+    <script type="module">
+      import { LineChart } from "../../../lib/chart-d3/LineChart.js";
+
+      const chart = new LineChart({
+        container: "chart",
+      });
+    </script>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script>
+      //purple link
+      var dataset = [
+        { date: "2016", pizzas: 60 },
+        { date: "2017", pizzas: 69 },
+        { date: "2018", pizzas: 47 },
+        { date: "2019", pizzas: 46 },
+        { date: "2020", pizzas: 49 },
+      ];
+
+      //green link
+      var dataset2 = [
+        { date: "2018", pizzas: 221 },
+        { date: "2019", pizzas: 237 },
+        { date: "2020", pizzas: 204 },
+      ];
+
+      //orange link
+      var dataset3 = [
+        { date: "2016", pizzas: 149 },
+        { date: "2017", pizzas: 146 },
+        { date: "2018", pizzas: 142 },
+        { date: "2019", pizzas: 139 },
+        { date: "2020", pizzas: 127 },
+      ];
+
+      //blue link
+      var dataset4 = [
+        { date: "2016", pizzas: 108 },
+        { date: "2017", pizzas: 103 },
+        { date: "2018", pizzas: 102 },
+        { date: "2019", pizzas: 101 },
+        { date: "2020", pizzas: 96 },
+      ];
+
+      // Calculate Margins and canvas dimensions
+      var margin = { top: 40, right: 40, bottom: 60, left: 60 },
+        width = 800 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+      //Parsers and Formaters
+      var parseTime = d3.timeParse("%Y");
+      var formatTime = d3.timeFormat("%Y");
+
+      // Scales
+      var x = d3
+        .scaleTime()
+        .domain(
+          dataset.map(function (d) {
+            return d.date;
+          })
+        )
+        .range([0, width]);
+
+      var xAxis1 = d3.axisBottom(x).ticks(5);
+
+      var y = d3.scaleLinear().range([height, 0]);
+
+      var yAxis = d3.axisLeft(y).ticks(5);
+
+      // Line
+      var line = d3
+        .line()
+        .x(function (d, i) {
+          return x(this.parseTime(d.date));
+        })
+        .y(function (d) {
+          return y(d.pizzas);
+        });
+
+      var svg = d3
+        .select("body")
+        .append("svg")
+        .style("background-color", "#fff")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      //Arguments for axes : Ranges for X, y
+      x.domain(
+        d3.extent(dataset, function (d) {
+          return parseTime(d.date);
+        })
+      );
+      y.domain([0, 250]);
+      console.log(
+        d3.extent(dataset, function (d) {
+          return d.date;
+        })
+      );
+      // Axes
+      // svg.append("g")
+      //     .attr("class", "axis axis--x")
+      //     .attr("transform", "translate(0," + height + ")")
+      //     .call(d3.axisBottom(x));
+
+      // x Axis setting
+      svg
+        .append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(xAxis1)
+        .call((g) =>
+          g.selectAll(".tick line").attr("y2", 0).attr("stroke-opacity", 0.1)
+        )
+        .call((g) =>
+          g
+            .selectAll(".tick text")
+            .attr("font-size", "1rem")
+            .attr("color", "#535353")
+        )
+        .call((g) =>
+          g
+            .select(".domain")
+            .attr("stroke", "#BFBFBF")
+            .attr("d", `M -10 0 H ${width}`)
+        );
+
+      // y Axis setting
+      svg
+        .append("g")
+        .attr("class", "axis axis--y")
+        .call(yAxis)
+        .call((g) =>
+          g
+            .selectAll(".tick line")
+            .attr("x2", width)
+            .attr("stroke-opacity", 0.1)
+        )
+        .call((g) =>
+          g
+            .selectAll(".tick text")
+            .attr("font-size", "14px")
+            .attr("color", "#535353")
+        )
+        .call((g) =>
+          g
+            .select(".domain")
+            .attr("stroke", "#BFBFBF")
+            .attr("d", `M 0 ${height} H0.5 V0.5`)
+        );
+      // Labels
+      svg
+        .append("text")
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
+        .attr(
+          "transform",
+          "translate(" + (margin.left - 94) + "," + height / 2 + ")rotate(-90)"
+        )
+        .text("Pizzas ( Thousands ) ");
+
+      svg
+        .append("text")
+        .style("font-size", "14px")
+        .attr("text-anchor", "middle")
+        .attr(
+          "transform",
+          "translate(" +
+            width / 2 +
+            "," +
+            (height - (margin.bottom - 104)) +
+            ")"
+        )
+        .text("Year");
+
+      //  Chart Title
+      // svg.append("text")
+      //       .attr("x", (width / 2))
+      //       .attr("y", 20 - (margin.top / 2))
+      //       .attr("text-anchor", "middle")
+      //       .style("font-size", "16px")
+      //       .text("Pizza consumption");
+
+      // Data Lines:
+      var tooltip = d3
+        .select("#my_dataviz")
+        .append("div")
+        .style("opacity", 1)
+        .attr("class", "tooltip")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-width", "1px")
+        .style("border-radius", "5px")
+        .style("padding", "10px");
+
+      var mouseover = function (d, value) {
+        tooltip.html(value).style("opacity", 1).style("visibility", "visible");
+      };
+
+      var mousemove = function (d) {
+        tooltip
+          .style("left", d3.mouse(this)[0] + 90 + "px")
+          .style("top", d3.mouse(this)[1] + "px");
+      };
+
+      var mouseleave = function (d) {
+        tooltip
+          .transition()
+          .duration(200)
+          .style("opacity", 0)
+          .style("visibility", "hidden");
+      };
+
+      var path = svg
+        .append("path")
+        .attr("stroke", "purple")
+        .attr("stroke-width", "2")
+        .attr("fill", "none")
+        .attr("d", line(dataset));
+
+      var path2 = svg
+        .append("path")
+        .attr("stroke", "green")
+        .attr("stroke-width", "2")
+        .attr("fill", "none")
+        .attr("d", line(dataset2));
+
+      var path3 = svg
+        .append("path")
+        .attr("stroke", "#FFBD2E")
+        .attr("stroke-width", "2")
+        .attr("fill", "none")
+        .attr("d", line(dataset3));
+
+      var path4 = svg
+        .append("path")
+        .attr("stroke", "#15EFD9")
+        .attr("stroke-width", "2")
+        .attr("fill", "none")
+        .attr("d", line(dataset4));
+
+      var circles = svg
+        .selectAll("dot")
+        .data(dataset)
+        .enter()
+        .append("svg:circle")
+        .attr("data-value", function (d, i) {
+          return i;
+        })
+        .attr("r", 5)
+        .attr("cx", function (d) {
+          return x(parseTime(d.date));
+        })
+        .attr("cy", function (d) {
+          return y(d.pizzas);
+        })
+        .style("fill", "purple")
+        .attr("opacity", 0)
+        .on("mouseover", function (d) {
+          mouseover(d, d.pizzas);
+        })
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave)
+        .transition()
+        .duration(200)
+        .delay(function (d, i) {
+          return 800 * i;
+        })
+        .attr("opacity", 1);
+
+      var circles2 = svg
+        .selectAll("dot")
+        .data(dataset2)
+        .enter()
+        .append("svg:circle")
+        .attr("class", "circ")
+        .attr("r", 5)
+        .attr("cx", function (d) {
+          return x(parseTime(d.date));
+        })
+        .attr("cy", function (d) {
+          return y(d.pizzas);
+        })
+        .style("fill", "green")
+        .attr("opacity", 0)
+        .transition()
+        .duration(200)
+        .delay(function (d, i) {
+          return 800 * i;
+        })
+        .attr("opacity", 1);
+
+      var circles3 = svg
+        .selectAll("dot")
+        .data(dataset3)
+        .enter()
+        .append("svg:circle")
+        .attr("class", "circ")
+        .attr("r", 5)
+        .attr("cx", function (d) {
+          return x(parseTime(d.date));
+        })
+        .attr("cy", function (d) {
+          return y(d.pizzas);
+        })
+        .style("fill", "#FFBD2E")
+        .attr("opacity", 0)
+        .transition()
+        .duration(200)
+        .delay(function (d, i) {
+          return 800 * i;
+        })
+        .attr("opacity", 1);
+
+      var circles4 = svg
+        .selectAll("dot")
+        .data(dataset4)
+        .enter()
+        .append("svg:circle")
+        .attr("class", "circ")
+        .attr("r", 5)
+        .attr("cx", function (d) {
+          return x(parseTime(d.date));
+        })
+        .attr("cy", function (d) {
+          return y(d.pizzas);
+        })
+        .style("fill", "#15EFD9")
+        .attr("opacity", 0)
+        .transition()
+        .duration(200)
+        .delay(function (d, i) {
+          return 800 * i;
+        })
+        .attr("opacity", 1);
+
+      //left to right animation
+      var totalLength = path.node().getTotalLength();
+      path
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .transition()
+        .ease(d3.easeLinear)
+        .duration(3200)
+        .attr("stroke-dashoffset", 0);
+
+      path2
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .transition()
+        .ease(d3.easeLinear)
+        .duration(3200)
+        .attr("stroke-dashoffset", 0);
+
+      path3
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .transition()
+        .ease(d3.easeLinear)
+        .duration(3200)
+        .attr("stroke-dashoffset", 0);
+
+      path4
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .transition()
+        .ease(d3.easeLinear)
+        .duration(3200)
+        .attr("stroke-dashoffset", 0);
+    </script> -->
+  </body>
+</html>
