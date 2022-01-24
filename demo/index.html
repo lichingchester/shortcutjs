@@ -4,25 +4,20 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <script src="https://cdn.tailwindcss.com/3.0.12"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              clifford: "#da373d",
-            },
-          },
-        },
-      };
-    </script>
-
-    <title>Demo</title>
+    <title>Title</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <script src="/vendors/requirejs/requirejs.js"></script>
   </head>
   <body>
-    <div class="lg:content-auto">
-      <h1 class="text-3xl font-bold underline text-clifford">Hello world!</h1>
+    <div class="container mx-auto mt-10">
+      <article class="prose max-w-none">
+        <h1>ShortcutJS demo pages list</h1>
+
+        <a href="/demo/pages/chart-d3/index.html">chart-d3</a>
+        <a href="/demo/pages/qrcode/index.html">qrcode</a>
+      </article>
     </div>
+
+    <script type="module"></script>
   </body>
 </html>

@@ -4,16 +4,31 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>QRCode</title>
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+
+    <script src="/lib/qrcode/qrcode.js"></script>
   </head>
   <body>
     <div class="container mx-auto mt-10">
       <article class="prose max-w-none">
         <h1>QRCode Generator</h1>
+
+        <canvas id="canvas"></canvas>
       </article>
     </div>
 
-    <script type="module"></script>
+    <script type="module">
+      // import { generateQRCode } from "/lib/qrcode/index";
+
+      // generateQRCode("canvas");
+
+      QRCode.toCanvas(canvas, "sample text", function (error) {
+        if (error) console.error(error);
+        console.log("success!");
+      });
+    </script>
   </body>
 </html>
