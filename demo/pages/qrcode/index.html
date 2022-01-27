@@ -12,11 +12,13 @@
     <script src="/lib/qrcode/qrcode.js"></script>
   </head>
   <body>
-    <div class="container mx-auto mt-10">
+    <div class="container px-5 mx-auto mt-10">
       <article class="prose max-w-none">
         <h1>QRCode Generator</h1>
 
-        <canvas id="canvas"></canvas>
+        <!-- <canvas id="canvas"></canvas> -->
+
+        <img src="" alt="" id="image" />
       </article>
     </div>
 
@@ -25,9 +27,25 @@
 
       // generateQRCode("canvas");
 
-      QRCode.toCanvas(canvas, "sample text", function (error) {
-        if (error) console.error(error);
-        console.log("success!");
+      var opts = {
+        errorCorrectionLevel: "H",
+        type: "image/png",
+        quality: 1,
+        margin: 1,
+        scale: 13,
+        color: {
+          // dark: "#000",
+          // light: "#fff",
+          dark: "#fff",
+          light: "#000",
+        },
+      };
+
+      QRCode.toDataURL("0.003", opts, function (err, url) {
+        if (err) throw err;
+
+        var img = document.getElementById("image");
+        img.src = url;
       });
     </script>
   </body>
